@@ -13,7 +13,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
   bool _isFlipping = false;
   bool _isHeads = true;
   final Random _random = Random();
-  static const int _numberOfFlips = 5; // Number of times the coin will flip
+  static const int _numberOfFlips = 10; // Number of times the coin will flip
   static const Duration _flipDuration = Duration(milliseconds: 2000); // Total duration of all flips
 
   @override
@@ -67,53 +67,59 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: _flipCoin,
-                      child: AnimatedBuilder(
-                        animation: _controller,
-                        builder: (context, child) {
-                          // Calculate the rotation angle for multiple flips
-                          final rotation = _controller.value * _numberOfFlips * pi;
-                          return Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.identity()
-                              ..setEntry(3, 2, 0.001)
-                              ..rotateY(rotation),
-                            child: Container(
-                              width: 200,
-                              height: 200,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _isHeads ? Colors.blueGrey : Colors.blueGrey.shade700,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 16),
-                                    blurRadius: 3,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: _isFlipping
-                                  ? null // Hide icon during flip
-                                  : Icon(
-                                      _isHeads ? Icons.home : Icons.person,
-                                      size: 100,
-                                      color: Colors.white,
+                    SizedBox(
+                      height: 200,
+                      child: GestureDetector(
+                        onTap: _flipCoin,
+                        child: AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            // Calculate the rotation angle for multiple flips
+                            final rotation = _controller.value * _numberOfFlips * pi;
+                            return Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.identity()
+                                ..setEntry(3, 2, 0.001)
+                                ..rotateY(rotation),
+                              child: Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _isHeads ? Colors.blueGrey : Colors.blueGrey.shade700,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 16),
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 4),
                                     ),
-                            ),
-                          );
-                        },
+                                  ],
+                                ),
+                                child: _isFlipping
+                                    ? null // Hide icon during flip
+                                    : Icon(
+                                        _isHeads ? Icons.home : Icons.person,
+                                        size: 100,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(height: 32),
-                    if (!_isFlipping)
-                      Text(
+                    AnimatedOpacity(
+                      opacity: _isFlipping ? 0.0 : 1.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Text(
                         _isHeads ? 'Tails' : 'Heads',
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
