@@ -84,11 +84,11 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
                               height: 200,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: _isHeads ? Colors.amber : Colors.amber.shade700,
+                                color: _isHeads ? Colors.blueGrey : Colors.blueGrey.shade700,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 26),
-                                    blurRadius: 10,
+                                    color: Colors.black.withValues(alpha: 16),
+                                    blurRadius: 3,
                                     offset: const Offset(0, 4),
                                   ),
                                 ],

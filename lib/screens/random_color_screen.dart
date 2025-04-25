@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,54 +72,11 @@ class _RandomColorScreenState extends State<RandomColorScreen> {
     }
   }
 
-  void _showColorSelectionModal() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Select Available Colors',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ...List.generate(
-                _availableColors.length,
-                (index) => CheckboxListTile(
-                  title: Text(
-                    _getColorName(_availableColors[index]),
-                    style: TextStyle(
-                      color: _availableColors[index],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  value: _selectedColors[index],
-                  onChanged: (value) {
-                    setModalState(() {
-                      _selectedColors[index] = value!;
-                    });
-                    _saveColorConfiguration();
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Done'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void _toggleColor(int index) {
+    setState(() {
+      _selectedColors[index] = !_selectedColors[index];
+    });
+    _saveColorConfiguration();
   }
 
   String _getColorName(Color color) {
@@ -150,7 +108,7 @@ class _RandomColorScreenState extends State<RandomColorScreen> {
     }
 
     setState(() {
-      _currentColor = availableColors[DateTime.now().millisecondsSinceEpoch % availableColors.length];
+      _currentColor = availableColors[Random().nextInt(availableColors.length)];
     });
   }
 
@@ -165,53 +123,82 @@ class _RandomColorScreenState extends State<RandomColorScreen> {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _generateRandomColor,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: _currentColor,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 16,
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: const Text('Pick a New Color'),
+          : Column(
+              children: [
+                Container(
+                  height: 120,
+                  margin: EdgeInsets.zero,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _availableColors.length,
+                    itemBuilder: (context, index) {
+                      final color = _availableColors[index];
+                      final isSelected = _selectedColors[index];
+                      return GestureDetector(
+                        onTap: () => _toggleColor(index),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / _availableColors.length,
+                          decoration: BoxDecoration(
+                            color: color,
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              if (!isSelected)
+                                const Icon(
+                                  Icons.block,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _getColorName(_currentColor),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black,
-                          blurRadius: 10,
-                          offset: Offset(0, 2),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _generateRandomColor,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: _currentColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 32,
+                              vertical: 16,
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          child: const Text('Pick a New Color'),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _getColorName(_currentColor),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black,
+                                blurRadius: 10,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: _showColorSelectionModal,
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.black.withValues(alpha: 26),
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Select Available Colors'),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
     );
   }
