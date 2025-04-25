@@ -1,68 +1,155 @@
 import 'package:flutter/material.dart';
 
-class RandomColorScreen extends StatelessWidget {
+class RandomColorScreen extends StatefulWidget {
   const RandomColorScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+  State<RandomColorScreen> createState() => _RandomColorScreenState();
+}
+
+class _RandomColorScreenState extends State<RandomColorScreen> {
+  final List<Color> _availableColors = [
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.purple,
+  ];
+  
+  final List<bool> _selectedColors = List.filled(6, true);
+  Color _currentColor = Colors.red;
+
+  void _showColorSelectionModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Random Color Generator',
+                'Select Available Colors',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 32),
-              Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 26),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+              const SizedBox(height: 16),
+              ...List.generate(
+                _availableColors.length,
+                (index) => CheckboxListTile(
+                  title: Text(
+                    _getColorName(_availableColors[index]),
+                    style: TextStyle(
+                      color: _availableColors[index],
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement random color generation
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Pick a New Color',
-                  style: TextStyle(fontSize: 16),
+                  value: _selectedColors[index],
+                  onChanged: (value) {
+                    setModalState(() {
+                      _selectedColors[index] = value!;
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 16),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
-                  // TODO: Show color selection modal
+                  Navigator.pop(context);
                 },
-                child: const Text('Configure Colors'),
+                child: const Text('Done'),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  String _getColorName(Color color) {
+    if (color == Colors.red) return 'Red';
+    if (color == Colors.orange) return 'Orange';
+    if (color == Colors.yellow) return 'Yellow';
+    if (color == Colors.green) return 'Green';
+    if (color == Colors.blue) return 'Blue';
+    if (color == Colors.purple) return 'Purple';
+    return 'Unknown';
+  }
+
+  void _generateRandomColor() {
+    final availableColors = <Color>[];
+    for (var i = 0; i < _availableColors.length; i++) {
+      if (_selectedColors[i]) {
+        availableColors.add(_availableColors[i]);
+      }
+    }
+
+    if (availableColors.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one color')),
+      );
+      return;
+    }
+
+    setState(() {
+      _currentColor = availableColors[DateTime.now().millisecondsSinceEpoch % availableColors.length];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      color: _currentColor,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: _generateRandomColor,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: _currentColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: const Text('Pick a New Color'),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _getColorName(_currentColor),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    blurRadius: 10,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: _showColorSelectionModal,
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.black.withValues(alpha: 26),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Select Available Colors'),
+            ),
+          ],
         ),
       ),
     );
