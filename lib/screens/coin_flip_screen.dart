@@ -14,13 +14,15 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
   bool _isFlipping = false;
   bool _isHeads = true;
   final Random _random = Random();
+  static const int _numberOfFlips = 5; // Number of times the coin will flip
+  static const Duration _flipDuration = Duration(milliseconds: 2000); // Total duration of all flips
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: _flipDuration,
     );
   }
 
@@ -49,64 +51,75 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 32.0),
+              child: Text(
                 'Tap the coin to flip it!',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 32),
-              GestureDetector(
-                onTap: _flipCoin,
-                child: AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    return Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.identity()
-                        ..setEntry(3, 2, 0.001)
-                        ..rotateY(_controller.value * pi),
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _isHeads ? Colors.amber : Colors.amber.shade700,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 26),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: _flipCoin,
+                      child: AnimatedBuilder(
+                        animation: _controller,
+                        builder: (context, child) {
+                          // Calculate the rotation angle for multiple flips
+                          final rotation = _controller.value * _numberOfFlips * pi;
+                          return Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.identity()
+                              ..setEntry(3, 2, 0.001)
+                              ..rotateY(rotation),
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _isHeads ? Colors.amber : Colors.amber.shade700,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 26),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: _isFlipping
+                                  ? null // Hide icon during flip
+                                  : Icon(
+                                      _isHeads ? Icons.home : Icons.person,
+                                      size: 100,
+                                      color: Colors.white,
+                                    ),
                             ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.monetization_on,
-                          size: 100,
-                          color: Colors.white,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    if (!_isFlipping)
+                      Text(
+                        _isHeads ? 'Tails' : 'Heads',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    );
-                  },
+                  ],
                 ),
               ),
-              const SizedBox(height: 32),
-              if (!_isFlipping)
-                Text(
-                  _isHeads ? 'Heads' : 'Tails',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
