@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class CoinFlipScreen extends StatefulWidget {
   const CoinFlipScreen({super.key});
