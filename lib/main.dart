@@ -23,12 +23,6 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
-        appBarTheme: AppBarTheme(
-          centerTitle: true,
-          backgroundColor: Colors.deepPurple.withValues(alpha: 255),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
       ),
       home: const MainScreen(),
     );
@@ -52,13 +46,6 @@ class _MainScreenState extends State<MainScreen> {
     ListSelectorScreen(),
   ];
 
-  static const List<String> _titles = [
-    'Coin Flip',
-    'Random Number',
-    'Random Color',
-    'List Selector',
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -68,29 +55,31 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
-      ),
       body: _screens[_selectedIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
-        destinations: const [
-          NavigationDestination(
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.deepPurple,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on),
-            label: 'Coin Flip',
+            label: 'Coin',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.numbers),
-            label: 'Random Number',
+            label: 'Number',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.color_lens),
-            label: 'Random Color',
+            label: 'Color',
           ),
-          NavigationDestination(
+          BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            label: 'List Selector',
+            label: 'List',
           ),
         ],
       ),
