@@ -112,24 +112,32 @@ class _RandomNumberScreenState extends State<RandomNumberScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-                    TextField(
-                      controller: _lowerBoundController,
-                      decoration: const InputDecoration(
-                        labelText: 'Lower Bound',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _upperBoundController,
-                      decoration: const InputDecoration(
-                        labelText: 'Upper Bound',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _lowerBoundController,
+                            decoration: const InputDecoration(
+                              labelText: 'Lower Bound',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: TextField(
+                            controller: _upperBoundController,
+                            decoration: const InputDecoration(
+                              labelText: 'Upper Bound',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          ),
+                        ),
+                      ],
                     ),
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
