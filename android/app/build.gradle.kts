@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.randomness_90_minute_flutter"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = 27.0.12077973
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
