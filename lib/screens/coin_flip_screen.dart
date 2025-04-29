@@ -14,7 +14,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
   bool _isHeads = true;
   final Random _random = Random();
   static const int _numberOfFlips = 10; // Number of times the coin will flip
-  static const Duration _flipDuration = Duration(milliseconds: 2000); // Total duration of all flips
+  static const Duration _flipDuration = Duration(milliseconds: 1000); // Total duration of all flips
 
   @override
   void initState() {

@@ -92,7 +92,11 @@ class _ListSelectorScreenState extends State<ListSelectorScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  // Ensure no focus is given to any widget after dialog dismissal
+                  FocusScope.of(context).unfocus();
+                },
                 child: const Text('OK'),
               ),
             ],
@@ -104,78 +108,84 @@ class _ListSelectorScreenState extends State<ListSelectorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'List Selector',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _itemController,
-                      decoration: const InputDecoration(
-                        labelText: 'Enter an item',
-                        border: OutlineInputBorder(),
-                      ),
-                      onSubmitted: (_) => _addItem(),
-                    ),
+    return GestureDetector(
+      onTap: () {
+        // Dismiss keyboard when tapping outside
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'List Selector',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _addItem,
-                    child: const Text('Add'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Items (${_items.length}/10)',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: _items.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No items added yet',
-                          style: TextStyle(fontSize: 16),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _itemController,
+                        decoration: const InputDecoration(
+                          labelText: 'Enter an item',
+                          border: OutlineInputBorder(),
                         ),
-                      )
-                    : ListView.builder(
-                        itemCount: _items.length,
-                        itemBuilder: (context, index) => Card(
-                          child: ListTile(
-                            title: Text(_items[index]),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () => _removeItem(index),
+                        onSubmitted: (_) => _addItem(),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: _addItem,
+                      child: const Text('Add'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Items (${_items.length}/10)',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: _items.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No items added yet',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: _items.length,
+                          itemBuilder: (context, index) => Card(
+                            child: ListTile(
+                              title: Text(_items[index]),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () => _removeItem(index),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _selectRandomItem,
-        child: const Icon(Icons.shuffle),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _selectRandomItem,
+          child: const Icon(Icons.shuffle),
+        ),
       ),
     );
   }
