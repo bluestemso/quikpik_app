@@ -1,4 +1,4 @@
-# randomness_90_minute_flutter
+# QuikPik
 
 This is a multi-purpose randomness generator app.  At minimum, it should contain features for:
  - Coin flips
