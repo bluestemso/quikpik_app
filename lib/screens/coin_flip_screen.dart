@@ -49,6 +49,14 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _flipCoin,
+        icon: const Icon(Icons.monetization_on),
+        label: const Text(
+          'Flip the coin',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -97,10 +105,24 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
                                 ),
                                 child: _isFlipping
                                     ? null // Hide icon during flip
-                                    : Icon(
-                                        _isHeads ? Icons.home : Icons.person,
-                                        size: 100,
-                                        color: Colors.white,
+                                    : Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            _isHeads ? Icons.home : Icons.person,
+                                            size: 80,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            _isHeads ? 'Tails' : 'Heads',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                               ),
                             );
@@ -109,17 +131,6 @@ class _CoinFlipScreenState extends State<CoinFlipScreen> with SingleTickerProvid
                       ),
                     ),
                     const SizedBox(height: 32),
-                    AnimatedOpacity(
-                      opacity: _isFlipping ? 0.0 : 1.0,
-                      duration: const Duration(milliseconds: 200),
-                      child: Text(
-                        _isHeads ? 'Tails' : 'Heads',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),

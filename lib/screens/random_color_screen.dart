@@ -114,92 +114,82 @@ class _RandomColorScreenState extends State<RandomColorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      color: _currentColor,
-      child: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-          : Column(
-              children: [
-                Container(
-                  height: 120,
-                  margin: EdgeInsets.zero,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _availableColors.length,
-                    itemBuilder: (context, index) {
-                      final color = _availableColors[index];
-                      final isSelected = _selectedColors[index];
-                      return GestureDetector(
-                        onTap: () => _toggleColor(index),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / _availableColors.length,
-                          decoration: BoxDecoration(
-                            color: color,
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              if (!isSelected)
-                                const Icon(
-                                  Icons.block,
-                                  color: Colors.white,
-                                  size: 32,
-                                ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _generateRandomColor,
+        icon: const Icon(Icons.format_paint),
+        label: const Text(
+          'Pick a New Color',
+          style: TextStyle(fontSize: 18),
+        ),
+        backgroundColor: Colors.white,
+        foregroundColor: _currentColor,
+      ),
+      body: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        color: _currentColor,
+        child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _generateRandomColor,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: _currentColor,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 16,
+              )
+            : Column(
+                children: [
+                  Container(
+                    height: 120,
+                    margin: EdgeInsets.zero,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _availableColors.length,
+                      itemBuilder: (context, index) {
+                        final color = _availableColors[index];
+                        final isSelected = _selectedColors[index];
+                        return GestureDetector(
+                          onTap: () => _toggleColor(index),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / _availableColors.length,
+                            decoration: BoxDecoration(
+                              color: color,
                             ),
-                            textStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                if (!isSelected)
+                                  const Icon(
+                                    Icons.block,
+                                    color: Colors.white,
+                                    size: 32,
+                                  ),
+                              ],
                             ),
                           ),
-                          child: const Text('Pick a New Color'),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _getColorName(_currentColor),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black,
-                                blurRadius: 10,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
-                ),
-              ],
-            ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        _getColorName(_currentColor),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 10,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 } 

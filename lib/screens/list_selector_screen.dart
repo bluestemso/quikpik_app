@@ -182,9 +182,13 @@ class _ListSelectorScreenState extends State<ListSelectorScreen> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: _selectRandomItem,
-          child: const Icon(Icons.shuffle),
+          icon: const Icon(Icons.shuffle),
+          label: const Text(
+            'Pick an item',
+            style: TextStyle(fontSize: 18),
+          ),
         ),
       ),
     );

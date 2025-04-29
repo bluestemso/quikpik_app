@@ -30,7 +30,7 @@ class _RandomNumberScreenState extends State<RandomNumberScreen> {
       _prefs = await SharedPreferences.getInstance();
       setState(() {
         _lowerBoundController.text = _prefs.getString('lowerBound') ?? '1';
-        _upperBoundController.text = _prefs.getString('upperBound') ?? '100';
+        _upperBoundController.text = _prefs.getString('upperBound') ?? '6';
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -95,6 +95,14 @@ class _RandomNumberScreenState extends State<RandomNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _generateRandomNumber,
+        icon: const Icon(Icons.casino),
+        label: const Text(
+          'Roll the dice',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -149,17 +157,6 @@ class _RandomNumberScreenState extends State<RandomNumberScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ],
-                    const SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: _generateRandomNumber,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      child: const Text(
-                        'Generate Random Number',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
                     const SizedBox(height: 32),
                     if (_randomNumber != null)
                       Container(
