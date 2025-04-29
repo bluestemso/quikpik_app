@@ -1,4 +1,4 @@
-package com.example.randomness_90_minute_flutter
+package solutions.bluestem.quikpik
 
 import io.flutter.embedding.android.FlutterActivity
 
