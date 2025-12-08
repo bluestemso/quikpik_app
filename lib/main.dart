@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:randomness_90_minute_flutter/screens/coin_flip_screen.dart';
-import 'package:randomness_90_minute_flutter/screens/random_number_screen.dart';
-import 'package:randomness_90_minute_flutter/screens/random_color_screen.dart';
-import 'package:randomness_90_minute_flutter/screens/list_selector_screen.dart';
+import 'package:quikpik_app/screens/coin_flip_screen.dart';
+import 'package:quikpik_app/screens/random_number_screen.dart';
+import 'package:quikpik_app/screens/random_color_screen.dart';
+import 'package:quikpik_app/screens/list_selector_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Randomness Generator',
+      title: 'QuikPik',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,
